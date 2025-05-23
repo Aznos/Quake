@@ -6,3 +6,5 @@ obj/
 *.o
 *.d
 *.iso
+
+limine/limine.dSYM
