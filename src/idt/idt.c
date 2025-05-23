@@ -33,7 +33,11 @@ void idt_init(void)
     idt_set_gate(vec, (void (*)())((uint8_t *)&isr_stub_table + vec * 8), 0x8E);
   }
 
-  // TODO: remap pic
+  pic_remap(0x20, 0x28);
+  for (int irq = 0; irq < 16; irq++)
+  {
+    idt_set_gate(0x20 + irq, (void (*)())((uint8_t *)&isr_stub_table + (32 + irq) * 8), 0x8E);
+  }
 
   load_idt(&idtr);
   __asm__ volatile("sti");
