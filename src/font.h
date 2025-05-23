@@ -1,17 +1,11 @@
-#if 0
-#ifndef FONT_H_
-#define FONT_H_
+#ifndef FONT_H
+#define FONT_H
 
-typedef struct {
-    unsigned char_width;
-    unsigned char_height;
-    const char * font_name;
-    unsigned char first_char;
-    unsigned char last_char;
-    unsigned char * font_bitmap;
-} font_t;
+#include <stdint.h>
 
-extern const font_t fonts[];
+#define FONT_CHAR_COUNT 256
+#define FONT_CHAR_HEIGHT 8
 
-#endif /* FONT_H_ */
+extern const uint8_t font[FONT_CHAR_COUNT][FONT_CHAR_HEIGHT];
+
 #endif

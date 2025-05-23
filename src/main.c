@@ -18,6 +18,43 @@ static void hcf(void)
         asm("hlt");
 }
 
+static inline void put_pixel(struct limine_framebuffer *fb, size_t x, size_t y, uint32_t color)
+{
+    uint32_t *base = (uint32_t *)fb->address;
+    size_t pitch_pixels = fb->pitch / 4;
+    base[y * pitch_pixels + x] = color;
+}
+
+static void draw_cell(struct limine_framebuffer *fb, size_t x0, size_t y0, uint32_t color)
+{
+    for (size_t dy = 0; dy < CELL; dy++)
+    {
+        for (size_t dx = 0; dx < CELL; dx++)
+        {
+            put_pixel(fb, x0 + dx, y0 + dy, color);
+        }
+    }
+}
+
+static void draw_char(struct limine_framebuffer *fb, size_t col, size_t row, unsigned char c, uint32_t fg, uint32_t bg)
+{
+    size_t x0 = col * CELL;
+    size_t y0 = row * CELL;
+    draw_cell(fb, x0, y0, bg);
+
+    for (size_t dy = 0; dy < CELL; dy++)
+    {
+        unsigned char bits = font[c][dy];
+        for (size_t dx = 0; dx < CELL; dx++)
+        {
+            if (bits & (1 << (7 - dx)))
+            {
+                put_pixel(fb, x0 + dx, y0 + dy, fg);
+            }
+        }
+    }
+}
+
 void kmain(void)
 {
     if (LIMINE_BASE_REVISION_SUPPORTED == false)
@@ -41,5 +78,18 @@ void kmain(void)
         }
     }
 
+    for (size_t r = 0; r < rows; r++)
+    {
+        for (size_t c = 0; c < cols; c++)
+        {
+            draw_cell(fb, c * CELL, r * CELL, 0xFF202020);
+        }
+    }
+
+    size_t cell_x = 314 / CELL;
+    size_t cell_y = 48 / CELL;
+    grid[cell_y][cell_x] = 'a';
+
+    draw_char(fb, cell_x, cell_x, 'a', 0xFFFFFFFF, 0xFF000000);
     hcf();
 }

@@ -1,6 +1,6 @@
 #include "font.h"
 
-unsigned char font[] = {
+const uint8_t font[FONT_CHAR_COUNT][FONT_CHAR_HEIGHT] = {
 
     /*
      * code=0, hex=0x00, ascii="^@"
