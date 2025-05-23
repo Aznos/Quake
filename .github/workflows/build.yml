@@ -1,0 +1,34 @@
+name: Build QuakeOS
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y xorriso make nasm gcc g++ build-essential
+
+      - name: Install x86_64-elf-gcc toolchain
+        run: |
+          sudo apt install -y gcc-x86-64-linux-gnu
+          sudo update-alternatives --install /usr/bin/x86_64-elf-gcc x86_64-elf-gcc /usr/bin/x86_64-linux-gnu-gcc 50
+
+      - name: Build kernel and ISO
+        run: make build CC=x86_64-elf-gcc
+
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bootable-image
+          path: image.iso
