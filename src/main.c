@@ -1,5 +1,6 @@
 #include "include/terminal.h"
 #include "include/framebuffer.h"
+#include "gdt/hal.h"
 
 __attribute__((used, section(".limine_requests"))) static volatile LIMINE_BASE_REVISION(3);
 __attribute__((used, section(".limine_requests"))) static volatile struct limine_framebuffer_request fb_req = {
@@ -23,7 +24,8 @@ void kmain(void)
     fb = fb_req.response->framebuffers[0];
     terminal_init(fb);
 
-    put_str(fb, 0, 0, "Hello world!", 0xFFFFFFFF, 0xFF000000);
+    HAL_init();
 
+    put_str(fb, 0, 0, "Hello world!", 0xFFFFFFFF, 0xFF000000);
     hcf();
 }
