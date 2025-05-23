@@ -2,23 +2,20 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <limine.h>
+#include "font.h"
+
+#define CELL 8
 
 __attribute__((used, section(".limine_requests"))) static volatile LIMINE_BASE_REVISION(3);
-
 __attribute__((used, section(".limine_requests"))) static volatile struct limine_framebuffer_request fb_req = {
-    .id = LIMINE_FRAMEBUFFER_REQUEST,
-    .revision = 0};
-
+    .id = LIMINE_FRAMEBUFFER_REQUEST, .revision = 0};
 __attribute__((used, section(".limine_requests_start"))) static volatile LIMINE_REQUESTS_START_MARKER;
-
 __attribute__((used, section(".limine_requests_end"))) static volatile LIMINE_REQUESTS_END_MARKER;
 
 static void hcf(void)
 {
     for (;;)
-    {
         asm("hlt");
-    }
 }
 
 void kmain(void)
@@ -29,10 +26,19 @@ void kmain(void)
         hcf();
 
     struct limine_framebuffer *fb = fb_req.response->framebuffers[0];
-    for (size_t i = 0; i < 100; i++)
+    size_t width = fb->width;
+    size_t height = fb->height;
+
+    size_t cols = width / CELL;
+    size_t rows = height / CELL;
+
+    static unsigned char grid[256][256];
+    for (size_t r = 0; r < rows; r++)
     {
-        volatile uint32_t *ptr = fb->address;
-        ptr[i * (fb->pitch / 4) + i] = 0xFF00FF00;
+        for (size_t c = 0; c < cols; c++)
+        {
+            grid[r][c] = ' ';
+        }
     }
 
     hcf();
