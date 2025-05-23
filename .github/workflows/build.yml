@@ -24,6 +24,11 @@ jobs:
           sudo apt install -y gcc-x86-64-linux-gnu
           sudo update-alternatives --install /usr/bin/x86_64-elf-gcc x86_64-elf-gcc /usr/bin/x86_64-linux-gnu-gcc 50
 
+      - name: Build Limine utility
+        run: |
+          git submodule update --init --recursive
+          make -C limine
+
       - name: Build kernel and ISO
         run: make build CC=x86_64-elf-gcc
 
