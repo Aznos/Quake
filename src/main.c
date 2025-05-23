@@ -1,6 +1,5 @@
 #include "include/terminal.h"
 #include "include/framebuffer.h"
-#include "idt/idt.h"
 
 __attribute__((used, section(".limine_requests"))) static volatile LIMINE_BASE_REVISION(3);
 __attribute__((used, section(".limine_requests"))) static volatile struct limine_framebuffer_request fb_req = {
@@ -25,15 +24,6 @@ void kmain(void)
     terminal_init(fb);
 
     put_str(fb, 0, 0, "Hello world!", 0xFFFFFFFF, 0xFF000000);
-    idt_init();
-
-    __asm__ volatile(
-        "mov $1, %%rax\n"
-        "xor %%rdx, %%rdx\n"
-        "div %%rdx\n"
-        :
-        :
-        : "rax", "rdx");
 
     hcf();
 }

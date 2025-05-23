@@ -21,7 +21,7 @@ void terminal_init(struct limine_framebuffer *fb)
   {
     for (size_t c = 0; c < cols; c++)
     {
-      draw_cell(fb, c * CELL, r * CELL, 0xFFFF0000);
+      draw_cell(fb, c * CELL, r * CELL, 0xFF101010);
     }
   }
 }
