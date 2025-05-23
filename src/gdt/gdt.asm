@@ -1,31 +1,32 @@
-[bits 32]
+[bits 64]
 
 global i686_GDT_Load
 i686_GDT_Load:
-  ;make new call frame
-  push ebp
-  mov ebp, esp
+  ;save frame
+  push rbp
+  mov rbp, rsp
 
   ;load gdt
-  mov eax, [ebp + 8]
-  lgdt [eax]
+  mov rax, [rbp + 16]
+  lgdt [rax]
 
   ;reload code segs
-  mov eax, [ebp + 12]
-  push eax
-  push .reload_cs
-  retf
+  mov ax, [rbp + 24]
+  push rax
+  lea rax, [rel .reload_cs]
+  push rax
+  retfq
 
-.reload_cs
-  ;reload data segs
-  mov ax, [ebp + 16]
+.reload_cs:
+  ;load data segs
+  mov ax, [rbp + 32]
   mov ds, ax
   mov es, ax
   mov fs, ax
   mov gs, ax
   mov ss, ax
 
-  ;restore old call frame
-  mov esp, ebp
-  pop ebp
+  ;restore frame
+  mov rsp, rbp
+  pop rbp
   ret

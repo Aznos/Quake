@@ -8,18 +8,18 @@
 
 typedef struct
 {
-  uint16_t limit_low; //limit (bits 0-15)
-  uint16_t base_low;  //base (bits 0-15)
-  uint8_t base_middle; //base (bits 16-23)
-  uint8_t access;     //access flags
-  uint8_t flags_limit_hi; //limit (bits 16-19) | flags
-  uint8_t base_high; //base (bits 24-31)
-} __attribute((packed)) GDTEntry;
+  uint16_t limit_low;
+  uint16_t base_low;
+  uint8_t base_middle;
+  uint8_t access;
+  uint8_t flags_limit_hi;
+  uint8_t base_high;
+} __attribute__((packed)) GDTEntry;
 
 typedef struct {
-  uint16_t limit; //sizeof(gdt) - 1
-  GDTEntry* ptr; //address of gdt
-} __attribute((packed)) GDTDescriptor;
+  uint16_t limit;
+  GDTEntry* ptr;
+} __attribute__((packed)) GDTDescriptor;
 
 typedef enum {
   GDT_ACCESS_CODE_READABLE = 0x02,
@@ -51,11 +51,11 @@ typedef enum {
   GDT_FLAG_GRANULARITY_4K = 0x80,
 } GDT_FLAGS;
 
-#define GDT_LIMIT_LOW(limit) (limit & 0xFFFF)
-#define GDT_BASE_LOW(base) (base & 0xFFFF)
-#define GDT_BASE_MIDDLE(base) ((base >> 16) & 0xFF)
-#define GDT_FLAGS_LIMIT_HI(limit, flags) ((limit >> 16) & 0xF) | (flags & 0xF0)
-#define GDT_BASE_HIGH(base) ((base >> 24) & 0xFF)
+#define GDT_LIMIT_LOW(limit) ((limit) & 0xFFFF)
+#define GDT_BASE_LOW(base) ((base) & 0xFFFF)
+#define GDT_BASE_MIDDLE(base) (((base) >> 16) & 0xFF)
+#define GDT_FLAGS_LIMIT_HI(limit, flags) ((((limit) >> 16) & 0xF) | ((flags) & 0xF0))
+#define GDT_BASE_HIGH(base) (((base) >> 24) & 0xFF)
 
 #define GDT_ENTRY(base, limit, access, flags) { \
   GDT_LIMIT_LOW(limit), \
@@ -66,32 +66,10 @@ typedef enum {
   GDT_BASE_HIGH(base) \
 }
 
-GDTEntry g_GDT[] = {
-  GDT_ENTRY(0, 0, 0, 0), //NULL descriptor
+extern GDTEntry g_GDT[];
+extern GDTDescriptor g_GDTDescriptor;
 
-  //Kernel 32-bit code seg
-  GDT_ENTRY(
-    0,
-    0xFFFFF,
-    GDT_ACCESS_PRESENT | GDT_ACCESS_RING0 | GDT_ACCESS_CODE_SEGMENT | GDT_ACCESS_CODE_READABLE,
-    GDT_FLAG_32BIT | GDT_FLAG_GRANULARITY_4K
-  )
-
-  //Kernel 32-bit data seg
-  GDT_ENTRY(
-    0,
-    0xFFFFF,
-    GDT_ACCESS_PRESENT | GDT_ACCESS_RING0 | GDT_ACCESS_DATA_SEGMENT | GDT_ACCESS_DATA_WRITABLE,
-    GDT_FLAG_32BIT | GDT_FLAG_GRANULARITY_4K
-  )
-};
-
-GDTDescriptor g_GDTDescriptor = {
-  sizeof(g_GDT) - 1,
-  g_GDT
-};
-
-void __attribute__((cdec1)) i686_GDT_Load(GDTDescriptor* descriptor, uint16_t codeSegment, uint16_t dataSegment);
+void __attribute__((cdecl)) i686_GDT_Load(GDTDescriptor* descriptor, uint16_t codeSegment, uint16_t dataSegment);
 void i686_GDT_init();
 
 #endif
