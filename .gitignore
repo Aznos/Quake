@@ -1,0 +1,8 @@
+.vscode/
+bin/
+iso_root/
+obj/
+
+*.o
+*.d
+*.iso
