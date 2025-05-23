@@ -1,4 +1,4 @@
-#include "include/idt.h"
+#include "idt.h"
 
 idt_entry_t idt[IDT_ENTRIES] __attribute__((aligned(0x10)));
 idtr_t idtr;
