@@ -36,7 +36,7 @@ static void draw_cell(struct limine_framebuffer *fb, size_t x0, size_t y0, uint3
     }
 }
 
-static void draw_char(struct limine_framebuffer *fb, size_t col, size_t row, unsigned char c, uint32_t fg, uint32_t bg)
+static void put_char(struct limine_framebuffer *fb, size_t col, size_t row, unsigned char c, uint32_t fg, uint32_t bg)
 {
     size_t x0 = col * CELL;
     size_t y0 = row * CELL;
@@ -52,6 +52,27 @@ static void draw_char(struct limine_framebuffer *fb, size_t col, size_t row, uns
                 put_pixel(fb, x0 + dx, y0 + dy, fg);
             }
         }
+    }
+}
+
+static void put_str(struct limine_framebuffer *fb, size_t start_col, size_t start_row, const char *str, uint32_t fg, uint32_t bg)
+{
+    size_t col = start_col;
+    size_t row = start_row;
+
+    while (*str)
+    {
+        if (*str == '\n')
+        {
+            col = start_col;
+            row++;
+        }
+        else
+        {
+            put_char(fb, col, row, *str, fg, bg);
+            col++;
+        }
+        str++;
     }
 }
 
@@ -82,14 +103,10 @@ void kmain(void)
     {
         for (size_t c = 0; c < cols; c++)
         {
-            draw_cell(fb, c * CELL, r * CELL, 0xFF202020);
+            draw_cell(fb, c * CELL, r * CELL, 0xFF101010);
         }
     }
 
-    size_t cell_x = 314 / CELL;
-    size_t cell_y = 48 / CELL;
-    grid[cell_y][cell_x] = 'a';
-
-    draw_char(fb, cell_x, cell_x, 'a', 0xFFFFFFFF, 0xFF000000);
+    put_str(fb, 0, 0, "Hello world!", 0xFFFFFFFF, 0xFF000000);
     hcf();
 }
