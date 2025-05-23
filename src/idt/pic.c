@@ -1,12 +1,13 @@
-#include <stdint.h>
+#include "pic.h"
+
 #define PIC1_CMD 0x20
 #define PIC1_DATA 0x21
 #define PIC2_CMD 0xA0
 #define PIC2_DATA 0xA1
 
-static void io_wait(void)
+static inline void io_wait(void)
 {
-  asm volatile("outb %al, $0x80" : : "a"(0));
+  outb(0x80, 0);
 }
 
 void pic_remap(int offset1, int offset2)

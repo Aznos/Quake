@@ -1,4 +1,8 @@
 #include "idt.h"
+#include "pic.h"
+
+extern void load_idt(idtr_t *);
+extern void isr_stub_table(void);
 
 idt_entry_t idt[IDT_ENTRIES] __attribute__((aligned(0x10)));
 idtr_t idtr;
@@ -20,25 +24,18 @@ extern void isr_stub_table();
 
 void idt_init(void)
 {
+  for (int i = 0; i < IDT_ENTRIES; i++)
+  {
+    *(uint64_t *)&idt[i] = 0;
+  }
+
   idtr.base = (uint64_t)&idt;
   idtr.limit = sizeof(idt_entry_t) * IDT_ENTRIES - 1;
 
-  for (int i = 0; i < IDT_ENTRIES; i++)
+  for (int i = 0; i < 32; i++)
   {
-    idt_set_gate(i, (void (*)())isr_stub_table, 0);
-  }
-
-  for (int vec = 0; vec < 32; vec++)
-  {
-    idt_set_gate(vec, (void (*)())((uint8_t *)&isr_stub_table + vec * 8), 0x8E);
-  }
-
-  pic_remap(0x20, 0x28);
-  for (int irq = 0; irq < 16; irq++)
-  {
-    idt_set_gate(0x20 + irq, (void (*)())((uint8_t *)&isr_stub_table + (32 + irq) * 8), 0x8E);
+    idt_set_gate(i, (void (*)())((uint8_t *)&isr_stub_table + i * 8), 0x8E);
   }
 
   load_idt(&idtr);
-  __asm__ volatile("sti");
 }

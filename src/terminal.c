@@ -1,5 +1,31 @@
 #include "include/terminal.h"
 
+void terminal_init(struct limine_framebuffer *fb)
+{
+  size_t width = fb->width;
+  size_t height = fb->height;
+
+  size_t cols = width / CELL;
+  size_t rows = height / CELL;
+
+  static unsigned char grid[256][256];
+  for (size_t r = 0; r < rows; r++)
+  {
+    for (size_t c = 0; c < cols; c++)
+    {
+      grid[r][c] = ' ';
+    }
+  }
+
+  for (size_t r = 0; r < rows; r++)
+  {
+    for (size_t c = 0; c < cols; c++)
+    {
+      draw_cell(fb, c * CELL, r * CELL, 0xFFFF0000);
+    }
+  }
+}
+
 inline void put_pixel(struct limine_framebuffer *fb, size_t x, size_t y, uint32_t color)
 {
   uint32_t *base = (uint32_t *)fb->address;

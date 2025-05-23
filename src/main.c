@@ -1,4 +1,6 @@
 #include "include/terminal.h"
+#include "include/framebuffer.h"
+#include "idt/idt.h"
 
 __attribute__((used, section(".limine_requests"))) static volatile LIMINE_BASE_REVISION(3);
 __attribute__((used, section(".limine_requests"))) static volatile struct limine_framebuffer_request fb_req = {
@@ -19,30 +21,20 @@ void kmain(void)
     if (fb_req.response == NULL || fb_req.response->framebuffer_count < 1)
         hcf();
 
-    struct limine_framebuffer *fb = fb_req.response->framebuffers[0];
-    size_t width = fb->width;
-    size_t height = fb->height;
-
-    size_t cols = width / CELL;
-    size_t rows = height / CELL;
-
-    static unsigned char grid[256][256];
-    for (size_t r = 0; r < rows; r++)
-    {
-        for (size_t c = 0; c < cols; c++)
-        {
-            grid[r][c] = ' ';
-        }
-    }
-
-    for (size_t r = 0; r < rows; r++)
-    {
-        for (size_t c = 0; c < cols; c++)
-        {
-            draw_cell(fb, c * CELL, r * CELL, 0xFF101010);
-        }
-    }
+    fb = fb_req.response->framebuffers[0];
+    terminal_init(fb);
 
     put_str(fb, 0, 0, "Hello world!", 0xFFFFFFFF, 0xFF000000);
+    idt_init();
+    __asm__ volatile("sti");
+
+    __asm__ volatile(
+        "mov $1, %%rax\n"
+        "xor %%rdx, %%rdx\n"
+        "div %%rdx\n"
+        :
+        :
+        : "rax", "rdx");
+
     hcf();
 }
