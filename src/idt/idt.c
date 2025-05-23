@@ -1,8 +1,8 @@
 #include "idt.h"
 #include "pic.h"
+#include "io/io.h"
 
 extern void load_idt(idtr_t *);
-extern void isr_stub_table(void);
 
 idt_entry_t idt[IDT_ENTRIES] __attribute__((aligned(0x10)));
 idtr_t idtr;
@@ -20,7 +20,7 @@ void idt_set_gate(uint8_t vector, void (*handler)(), uint8_t flags)
 }
 
 extern void load_idt(idtr_t *idtr_ptr);
-extern void isr_stub_table();
+extern uint64_t isr_stub_table[];
 
 void idt_init(void)
 {
@@ -34,8 +34,12 @@ void idt_init(void)
 
   for (int i = 0; i < 32; i++)
   {
-    idt_set_gate(i, (void (*)())((uint8_t *)&isr_stub_table + i * 8), 0x8E);
+    uint64_t addr = isr_stub_table[i];
+    idt_set_gate(i, (void (*)(void))addr, 0x8E);
   }
 
   load_idt(&idtr);
+
+  outb(0x21, 0xFF);
+  outb(0xA1, 0xFF);
 }

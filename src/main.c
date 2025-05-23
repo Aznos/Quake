@@ -26,7 +26,6 @@ void kmain(void)
 
     put_str(fb, 0, 0, "Hello world!", 0xFFFFFFFF, 0xFF000000);
     idt_init();
-    __asm__ volatile("sti");
 
     __asm__ volatile(
         "mov $1, %%rax\n"

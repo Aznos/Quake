@@ -1,5 +1,7 @@
+BITS 64
+DEFAULT REL
+
 global load_idt
 load_idt:
-  mov rdx, [rsp+8] ; pointer to IDTR struct
-  lidt [rdx]
+  lidt [rdi]
   ret

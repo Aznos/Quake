@@ -2,6 +2,7 @@
 #include "io/io.h"
 #include "include/limine.h"
 #include "include/terminal.h"
+#include "include/framebuffer.h"
 
 char *itoa(int value, char *str, int base);
 
@@ -12,8 +13,6 @@ size_t strlen(const char *str)
     len++;
   return len;
 }
-
-extern struct limine_framebuffer *fb;
 
 __attribute__((noreturn)) void isr_handler(int vector)
 {

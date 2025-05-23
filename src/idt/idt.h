@@ -26,6 +26,7 @@ typedef struct
 
 extern idt_entry_t idt[IDT_ENTRIES];
 extern idtr_t idtr;
+extern uint64_t isr_stub_table[];
 
 void idt_set_gate(uint8_t vector, void (*isr)(), uint8_t flags);
 void idt_init(void);
