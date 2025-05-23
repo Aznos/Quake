@@ -28,7 +28,7 @@ jobs:
         run: make build CC=x86_64-elf-gcc
 
       - name: Upload ISO artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bootable-image
           path: image.iso
