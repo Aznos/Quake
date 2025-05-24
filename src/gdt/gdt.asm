@@ -1,7 +1,7 @@
 [bits 64]
 
-global i686_GDT_Load
-i686_GDT_Load:
+global gdt_load
+gdt_load:
   lgdt [rdi]
 
   mov ax, dx

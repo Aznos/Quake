@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#define i686_GDT_CODE_SEGMENT 0x08
-#define i686_GDT_DATA_SEGMENT 0x10
+#define GDT_CODE_SEGMENT 0x08
+#define GDT_DATA_SEGMENT 0x10
 
 typedef struct
 {
@@ -14,12 +14,12 @@ typedef struct
   uint8_t access;
   uint8_t flags_limit_hi;
   uint8_t base_high;
-} __attribute__((packed)) GDTEntry;
+} __attribute__((packed)) gdt_entry;
 
 typedef struct {
   uint16_t limit;
-  GDTEntry* ptr;
-} __attribute__((packed)) GDTDescriptor;
+  gdt_entry* ptr;
+} __attribute__((packed)) gdt_descriptor;
 
 typedef enum {
   GDT_ACCESS_CODE_READABLE = 0x02,
@@ -66,10 +66,10 @@ typedef enum {
   GDT_BASE_HIGH(base) \
 }
 
-extern GDTEntry g_GDT[];
-extern GDTDescriptor g_GDTDescriptor;
+extern gdt_entry g_GDT[];
+extern gdt_descriptor g_GDTDescriptor;
 
-void __attribute__((cdecl)) i686_GDT_Load(GDTDescriptor* descriptor, uint16_t codeSegment, uint16_t dataSegment);
-void i686_GDT_init();
+void __attribute__((cdecl)) gdt_load(gdt_descriptor* descriptor, uint16_t code_segment, uint16_t data_segment);
+void gdt_init();
 
 #endif
