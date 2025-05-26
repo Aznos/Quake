@@ -3,6 +3,7 @@
 
 #include "gdt.h"
 #include "idt/idt.h"
+#include "idt/isr.h"
 
 void HAL_init();
 

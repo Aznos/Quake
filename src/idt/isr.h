@@ -3,13 +3,19 @@
 
 #include <stdint.h>
 
-typedef struct {
-  uint32_t ds; // data seg pushed by us
-  uint32_t edi, esi, ebp, kern_esp, ebx, edx, ecx, eax; // pusha
-  uint32_t interrupt, error;
-  uint32_t eip, cs, eflags, esp, ss; // pushed automatically by cpu
+typedef struct
+{
+  uint64_t r15, r14, r13, r12, r11, r10, r9, r8;
+  uint64_t rsi, rdi, rbp, rdx, rcx, rbx, rax;
+
+  uint64_t vector;
+  uint64_t error_code;
+
+  uint64_t rip, cs, rflags, rsp, ss; // pushed by cpu
 } __attribute__((packed)) registers;
 
-void __attribute__((cdecl)) isr_handler(registers* regs);
+void isr_handler(registers *regs);
+void isr_initialize_gates(void);
+void isr_initialize(void);
 
 #endif

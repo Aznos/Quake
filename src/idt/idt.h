@@ -28,8 +28,12 @@ typedef struct
 #define IDT_DPL_RING3 0x60
 
 #define IDT_TYPE_ATTR(type, dpl) (IDT_FLAG_PRESENT | ((dpl) << 5) | (type))
+#define FLAG_SET(x, flag) x |= (flag)
+#define FLAG_UNSET(x, flag) x &= ~(flag)
 
 void idt_set_gate(int vec, void (*handler)(void), uint8_t ist, uint8_t type_attr);
+void idt_enable_gate(int interrupt);
+void idt_disable_gate(int interrupt);
 void idt_init(void);
 void idt_load(idt_descriptor *idt_desc);
 

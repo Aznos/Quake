@@ -31,7 +31,13 @@ void kmain(void)
     terminal_init(fb);
 
     HAL_init();
-
     put_str(fb, 0, 0, "Hello world!", 0xFFFFFFFF, 0xFF000000);
+
+    __asm("int $0x2");
+    put_str(fb, 0, 1, "Hello world!", 0xFFFFFFFF, 0xFF000000);
+    __asm("int $0x3");
+    put_str(fb, 0, 2, "Hello world!", 0xFFFFFFFF, 0xFF000000);
+    __asm("int $0x4");
+
     hcf();
 }

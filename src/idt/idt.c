@@ -29,9 +29,19 @@ __attribute__((interrupt)) static void default_isr(void *frame)
 
 void idt_init(void)
 {
-  for (int v = 0; v < 256; v++)
-  {
-    idt_set_gate(v, (void (*)(void))default_isr, 0, IDT_TYPE_ATTR(IDT_TYPE_INTERRUPT, 0));
-    idt_load(&g_idt_desc);
-  }
+  for (int v = 0; v < 256; ++v)
+    idt_set_gate(v, (void (*)(void))default_isr, 0,
+                 IDT_TYPE_ATTR(IDT_TYPE_INTERRUPT, 0));
+
+  idt_load(&g_idt_desc);
+}
+
+void idt_enable_gate(int interrupt)
+{
+  FLAG_SET(g_idt[interrupt].type_attr, IDT_FLAG_PRESENT);
+}
+
+void idt_disable_gate(int interrupt)
+{
+  FLAG_UNSET(g_idt[interrupt].type_attr, IDT_FLAG_PRESENT);
 }
