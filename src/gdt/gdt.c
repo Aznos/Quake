@@ -21,5 +21,5 @@ gdt_descriptor g_GDTDescriptor = {
 
 void gdt_init()
 {
-    gdt_load(&g_GDTDescriptor, 0, GDT_DATA_SEGMENT);
+    gdt_load(&g_GDTDescriptor, GDT_CODE_SEGMENT, GDT_DATA_SEGMENT);
 }

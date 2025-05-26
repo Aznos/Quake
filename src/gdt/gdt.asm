@@ -1,4 +1,5 @@
 [bits 64]
+default rel
 
 global gdt_load
 gdt_load:
@@ -11,4 +12,10 @@ gdt_load:
   mov gs, ax
   mov ss, ax
 
+  push rsi
+  lea rax, [rel reload_cs]
+  push rax
+  retfq
+
+reload_cs:
   ret

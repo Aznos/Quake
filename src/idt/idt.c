@@ -1,4 +1,5 @@
 #include "idt.h"
+#include "gdt/gdt.h"
 
 static idt_entry g_idt[256];
 static idt_descriptor g_idt_desc = {
@@ -6,15 +7,15 @@ static idt_descriptor g_idt_desc = {
     .base = (uint64_t)g_idt,
 };
 
+/* idt.c */
 void idt_set_gate(int vec, void (*handler)(void), uint8_t ist, uint8_t type_attr)
 {
   uint64_t addr = (uint64_t)handler;
 
   g_idt[vec].offset_low = addr & 0xFFFF;
-  g_idt[vec].selector = 0x08; // kernel cs in gdt
-  g_idt[vec].ist = ist & 0x7; // bits 0-2 only
-  g_idt[vec]
-      .type_attr = type_attr;
+  g_idt[vec].selector = GDT_CODE_SEGMENT;
+  g_idt[vec].ist = ist & 0x7;
+  g_idt[vec].type_attr = type_attr;
   g_idt[vec].offset_mid = (addr >> 16) & 0xFFFF;
   g_idt[vec].offset_high = (addr >> 32);
   g_idt[vec].zero = 0;
