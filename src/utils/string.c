@@ -56,3 +56,17 @@ char *itoa(int value, char *str, int base)
 
   return str;
 }
+
+size_t kstrlen(const char *s)
+{
+  const char *p = s;
+  while (*p)
+    p++;
+  return (size_t)(p - s);
+}
+
+size_t kstrcpy(char *dst, const char *src)
+{
+  while ((*dst++ = *src++))
+    ;
+}

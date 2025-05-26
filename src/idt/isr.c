@@ -5,6 +5,8 @@
 #include "include/terminal.h"
 #include "utils/string.h"
 
+static size_t log_row = 10;
+
 void isr_initialize()
 {
   isr_initialize_gates();
@@ -14,7 +16,22 @@ void isr_initialize()
   }
 }
 
-void isr_handler(registers *regs)
+void isr_handler(registers *r)
 {
-  put_str(fb, 0, 10, "Received interrupt: " + regs->vector, 0xFFFFFFFF, 0xFF000000);
+  char num[20];
+  char line[32];
+
+  utoa64(r->vector, num, 10);
+
+  kstrcpy(line, "INT ");
+  kstrcpy(line + 4, num);
+
+  put_str(fb, 0, log_row, line, 0xFFFFFFFF, 0xFF000000);
+
+  log_row++;
+  size_t max_rows = fb->height / CELL;
+  if (log_row >= max_rows)
+  {
+    log_row = 10;
+  }
 }
