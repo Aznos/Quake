@@ -7,7 +7,6 @@ static idt_descriptor g_idt_desc = {
     .base = (uint64_t)g_idt,
 };
 
-/* idt.c */
 void idt_set_gate(int vec, void (*handler)(void), uint8_t ist, uint8_t type_attr)
 {
   uint64_t addr = (uint64_t)handler;

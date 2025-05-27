@@ -1,5 +1,6 @@
 #include "include/terminal.h"
 #include "include/framebuffer.h"
+#include "include/kernel.h"
 #include "gdt/hal.h"
 
 __attribute__((used, section(".limine_requests"))) static volatile LIMINE_BASE_REVISION(3);
@@ -11,7 +12,14 @@ __attribute__((used, section(".limine_requests_end"))) static volatile LIMINE_RE
 static void hcf(void)
 {
     for (;;)
-        asm("hlt");
+    {
+        __asm__("cli; hlt");
+    }
+}
+
+void panic()
+{
+    hcf();
 }
 
 struct
@@ -33,9 +41,9 @@ void kmain(void)
 
     term_printf("Boot OK - framebuffer %ux%u\n\n", fb->width, fb->height);
 
-    __asm__("int $0x2");
-    __asm__("int $0x3");
-    __asm__("int $0x4");
+    asm __volatile__("movl $0, %eax");
+    asm __volatile__("divl %eax");
+    asm __volatile__("ret");
 
     hcf();
 }

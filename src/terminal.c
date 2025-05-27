@@ -118,39 +118,64 @@ void term_printf(const char *fmt, ...)
     }
 
     fmt++;
+
+    int longness = 0;
+    while (*fmt == 'l')
+    {
+      longness++;
+      fmt++;
+    }
+
     switch (*fmt)
     {
     case '%':
       term_putchar('%');
       break;
+
     case 'c':
       term_putchar((char)va_arg(ap, int));
       break;
+
     case 's':
       term_write(va_arg(ap, char *));
       break;
 
     case 'd':
     case 'i':
-      int n = va_arg(ap, int);
-      if (n < 0)
+    {
+      long long v = longness ? va_arg(ap, long long) : va_arg(ap, int);
+      if (v < 0)
       {
         term_putchar('-');
-        n = -n;
+        v = -v;
       }
-      print_uint((unsigned)n, 10);
-      break;
+      print_uint((uint64_t)v, 10);
+    }
+    break;
 
     case 'u':
-      print_uint(va_arg(ap, unsigned), 10);
-      break;
+    {
+      uint64_t v = longness ? va_arg(ap, unsigned long long)
+                            : va_arg(ap, unsigned);
+      print_uint(v, 10);
+    }
+    break;
+
     case 'x':
-      print_uint(va_arg(ap, unsigned), 16);
-      break;
+    {
+      uint64_t v = longness ? va_arg(ap, unsigned long long)
+                            : va_arg(ap, unsigned);
+      print_uint(v, 16);
+    }
+    break;
+
     case 'p':
+    {
       term_write("0x");
-      print_uint(va_arg(ap, uintptr_t), 16);
-      break;
+      print_uint((uint64_t)va_arg(ap, void *), 16);
+    }
+    break;
+
     default:
       term_putchar('?');
       break;

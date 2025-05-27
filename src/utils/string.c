@@ -1,5 +1,7 @@
 #include "string.h"
 
+static const char digits[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+
 void reverse(char str[], int length)
 {
   int start = 0;
@@ -15,46 +17,49 @@ void reverse(char str[], int length)
   }
 }
 
-char *itoa(int value, char *str, int base)
+char *utoa64(uint64_t v, char *buf, int base)
 {
   if (base < 2 || base > 36)
   {
-    str[0] = '\0'; // Invalid base
-    return str;
+    buf[0] = '\0';
+    return buf;
   }
 
-  bool isNegative = false;
-  int i = 0;
-
-  if (value == 0)
+  char *p = buf;
+  if (v == 0)
   {
-    str[i++] = '0';
-    str[i] = '\0';
-    return str;
+    *p++ = '0';
+    *p = '\0';
+    return buf;
   }
 
-  if (value < 0 && base == 10)
+  while (v)
   {
-    isNegative = true;
-    value = -value;
+    *p++ = digits[v % base];
+    v /= base;
   }
 
-  while (value != 0)
+  *p = '\0';
+  reverse(buf, p - buf);
+  return buf;
+}
+
+char *itoa64(int64_t v, char *buf, int base)
+{
+  if (base < 2 || base > 36)
   {
-    int remainder = value % base;
-    str[i++] = (remainder > 9) ? (remainder - 10) + 'a' : remainder + '0';
-    value /= base;
+    buf[0] = '\0';
+    return buf;
   }
 
-  if (isNegative)
+  if (v < 0)
   {
-    str[i++] = '-';
+    *buf++ = '-';
+    utoa64((uint64_t)(-v), buf, base);
+    return buf - 1;
   }
 
-  str[i] = '\0';
-  reverse(str, i);
-
-  return str;
+  return utoa64((uint64_t)v, buf, base);
 }
 
 size_t kstrlen(const char *s)

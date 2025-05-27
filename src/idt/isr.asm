@@ -3,7 +3,6 @@ default rel
 
 extern isr_handler
 
-
 %macro PUSH_REGS 0
     push r15
     push r14
@@ -43,15 +42,15 @@ extern isr_handler
 %macro ISR_NOERR 1
 global isr%1
 isr%1:
-  push qword 0 ; dummy err code
-  push qword %1 ; interrupt number
+  push qword 0
+  push qword %1
   jmp isr_common
 %endmacro
 
 %macro ISR_ERR 1
 global isr%1
 isr%1:
-  push qword %1 ; interrupt number
+  push qword %1
   jmp isr_common
 %endmacro
 

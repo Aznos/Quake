@@ -2,6 +2,13 @@
 #define ISR_H
 
 #include <stdint.h>
+#include <stddef.h>
+#include "idt.h"
+#include "gdt/gdt.h"
+#include "include/framebuffer.h"
+#include "include/terminal.h"
+#include "include/kernel.h"
+#include "utils/string.h"
 
 typedef struct
 {
@@ -14,7 +21,10 @@ typedef struct
   uint64_t rip, cs, rflags, rsp, ss; // pushed by cpu
 } __attribute__((packed)) registers;
 
+typedef void (*isr_handler_t)(registers *regs);
+
 void isr_handler(registers *regs);
+void isr_register_handler(uint64_t vector);
 void isr_initialize_gates(void);
 void isr_initialize(void);
 
