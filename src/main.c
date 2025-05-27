@@ -29,9 +29,9 @@ void kmain(void)
 
     fb = fb_req.response->framebuffers[0];
     terminal_init(fb);
-
     HAL_init();
-    put_str(fb, 0, 0, "Hello world!", 0xFFFFFFFF, 0xFF000000);
+
+    term_printf("Boot OK - framebuffer %ux%u\n\n", fb->width, fb->height);
 
     __asm__("int $0x2");
     __asm__("int $0x3");
