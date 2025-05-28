@@ -1,7 +1,8 @@
 [bits 64]
+default rel
 
-global i686_GDT_Load
-i686_GDT_Load:
+global gdt_load
+gdt_load:
   lgdt [rdi]
 
   mov ax, dx
@@ -11,4 +12,10 @@ i686_GDT_Load:
   mov gs, ax
   mov ss, ax
 
+  push rsi
+  lea rax, [rel reload_cs]
+  push rax
+  retfq
+
+reload_cs:
   ret

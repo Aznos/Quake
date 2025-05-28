@@ -2,5 +2,8 @@
 
 void HAL_init()
 {
-  i686_GDT_init();
+  gdt_init();
+  idt_init();
+  isr_initialize();
+  irq_initialize();
 }
