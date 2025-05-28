@@ -47,8 +47,8 @@ void pic_mask(int irq)
     port = PIC2_DATA_PORT;
   }
 
-  uint8_t mask = inb(PIC1_DATA_PORT);
-  outb(PIC1_DATA_PORT, mask | (1 << irq));
+  uint8_t mask = inb(port);
+  outb(port, mask | (1 << irq));
 }
 
 void pic_unmask(int irq)
@@ -65,8 +65,8 @@ void pic_unmask(int irq)
     port = PIC2_DATA_PORT;
   }
 
-  uint8_t mask = inb(PIC1_DATA_PORT);
-  outb(PIC1_DATA_PORT, mask & ~(1 << irq));
+  uint8_t mask = inb(port);
+  outb(port, mask & ~(1 << irq));
 }
 
 void pic_disable()
