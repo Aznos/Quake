@@ -29,7 +29,7 @@ void irq_initialize()
   enable_interrupts();
 }
 
-void ireq_register_handler(int irq, irq_handler_t handler)
+void irq_register_handler(int irq, irq_handler_t handler)
 {
   g_irq_handlers[irq] = handler;
 }

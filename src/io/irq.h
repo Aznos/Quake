@@ -13,6 +13,6 @@ typedef void (*irq_handler_t)(registers* regs);
 
 void irq_handler(registers *regs);
 void irq_initialize();
-void ireq_register_handler(int irq, irq_handler_t handler);
+void irq_register_handler(int irq, irq_handler_t handler);
 
 #endif
