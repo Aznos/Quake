@@ -24,7 +24,7 @@ typedef struct
 typedef void (*isr_handler_t)(registers *regs);
 
 void isr_handler(registers *regs);
-void isr_register_handler(uint64_t vector);
+void isr_register_handler(int interrupt, isr_handler_t handler);
 void isr_initialize_gates(void);
 void isr_initialize(void);
 

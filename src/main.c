@@ -28,17 +28,6 @@ struct
     uint64_t base;
 } __attribute__((packed)) gdtr_readback;
 
-static inline void force_fault_with_r14(uint64_t val)
-{
-    __asm__ volatile(
-        "mov %0,  %%r14   \n\t"
-        "xor %%eax, %%eax \n\t"
-        "div %%eax        \n\t"
-        :
-        : "r"(val)
-        : "r14", "rax", "rdx");
-}
-
 void kmain(void)
 {
     if (LIMINE_BASE_REVISION_SUPPORTED == false)
@@ -52,7 +41,8 @@ void kmain(void)
 
     term_printf("Boot OK - framebuffer %ux%u\n\n", fb->width, fb->height);
 
-    force_fault_with_r14(9843);
-
-    hcf();
+    for (;;)
+    {
+        __asm__ volatile("hlt");
+    }
 }

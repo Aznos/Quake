@@ -1,15 +1,27 @@
+bits 64
+default rel
+section .text
+
 global outb
 outb:
-  [bits 64]
-  mov dx, [esp + 4]
-  mov al, [esp + 8]
+  mov dx, di
+  mov al, sil
   out dx, al
   ret
 
 global inb
 inb:
-  [bits 64]
-  mov dx, [esp + 4]
-  xor eax, rax
+  mov dx, di
   in al, dx
+  movzx eax, al
+  ret
+
+global enable_interrupts
+enable_interrupts:
+  sti
+  ret
+
+global disable_interrupts
+disable_interrupts:
+  cli
   ret

@@ -69,3 +69,9 @@ void isr_handler(registers *regs)
     panic();
   }
 }
+
+void isr_register_handler(int interrupt, isr_handler_t handler)
+{
+  g_isr_handlers[interrupt] = handler;
+  idt_enable_gate(interrupt);
+}
