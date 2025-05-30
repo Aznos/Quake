@@ -20,7 +20,7 @@ void panic()
 
 void timer(registers *regs)
 {
-    term_printf(".");
+    term_printf("timer\n");
 }
 
 struct
