@@ -7,12 +7,12 @@ static size_t cols = 0, rows = 0;
 static uint32_t def_fg = 0xFFFFFFFF;
 static uint32_t def_bg = 0xFF000000;
 
-static void scroll_up(void)
+static inline void scroll_up(void)
 {
   size_t row_bytes = fb->pitch * CELL;
   uint8_t *base = (uint8_t *)fb->address;
 
-  memmove(base, base + row_bytes, row_bytes * (rows - 1));
+  kmemmove(base, base + row_bytes, row_bytes * (rows - 1));
   uint32_t *last = (uint32_t *)(base + row_bytes * (rows - 1));
   size_t pixels_last_row = (row_bytes / 4);
 
