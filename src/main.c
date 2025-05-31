@@ -1,6 +1,7 @@
 #include "include/terminal.h"
 #include "include/framebuffer.h"
 #include "include/kernel.h"
+#include "include/debug.h"
 #include "gdt/hal.h"
 #include "io/irq.h"
 
@@ -42,6 +43,8 @@ void kmain(void)
     irq_register_handler(0, timer);
 
     term_printf("Boot OK - framebuffer %ux%u\n\n", fb->width, fb->height);
+
+    dgb_putstr("Hello from quake!");
 
     for (;;)
     {

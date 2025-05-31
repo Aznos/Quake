@@ -94,4 +94,4 @@ build: all
 
 .PHONY: run
 run: build
-	qemu-system-x86_64 -cdrom image.iso
+	qemu-system-x86_64 -debugcon stdio -cdrom image.iso
