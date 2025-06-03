@@ -9,6 +9,7 @@
 #include <stdarg.h>
 #include "include/font.h"
 #include "include/limine.h"
+#include "include/debug.h"
 #include "utils/string.h"
 #include "io/io.h"
 
