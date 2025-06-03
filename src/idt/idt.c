@@ -34,6 +34,7 @@ void idt_init(void)
                  IDT_TYPE_ATTR(IDT_TYPE_INTERRUPT, 0));
 
   idt_load(&g_idt_desc);
+  dbg_printf(INFO, "IDT initialized with %d gates", 256);
 }
 
 void idt_enable_gate(int interrupt)

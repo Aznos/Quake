@@ -43,6 +43,8 @@ void isr_initialize()
   {
     idt_enable_gate(i);
   }
+
+  dbg_printf(INFO, "ISR initialized with %d handlers", 256);
 }
 
 void isr_handler(registers *regs)

@@ -5,11 +5,12 @@
 #include "pic.h"
 #include "io.h"
 #include "include/terminal.h"
+#include "include/debug.h"
 #include <stddef.h>
 
 #define PIC_REMAP_OFFSET 0x20
 
-typedef void (*irq_handler_t)(registers* regs);
+typedef void (*irq_handler_t)(registers *regs);
 
 void irq_handler(registers *regs);
 void irq_initialize();

@@ -73,6 +73,8 @@ void terminal_init(struct limine_framebuffer *fb_)
   }
 
   cur_col = cur_row = 0;
+
+  dbg_printf(INFO, "Terminal initialized");
 }
 
 static void term_putchar(char ch)
