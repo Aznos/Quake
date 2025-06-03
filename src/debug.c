@@ -1,5 +1,23 @@
 #include "include/debug.h"
 
+static const char *const color[] = {
+    [DEBUG] = "\033[2;37m",
+    [INFO] = "\033[37m",
+    [WARNING] = "\033[1;33m",
+    [ERROR] = "\033[1;31m",
+    [CRITICAL] = "\033[1;37;41m",
+};
+
+static const char *const tag[] = {
+    [DEBUG] = "[DEBUG] ",
+    [INFO] = "[INFO] ",
+    [WARNING] = "[WARNING] ",
+    [ERROR] = "[ERROR] ",
+    [CRITICAL] = "[CRITICAL] ",
+};
+
+static const char *const color_reset = "\033[0m";
+
 void dbg_putchar(char c)
 {
   outb(0xE9, c);
@@ -20,8 +38,12 @@ static void print_uint(uint64_t v, unsigned base)
   dbg_putstring(buf);
 }
 
-void dbg_printf(const char *fmt, ...)
+void dbg_printf(enum debug_level level, const char *fmt, ...)
 {
+  dbg_putstring(color[level]);
+  dbg_putstring(tag[level]);
+  dbg_putstring(color_reset);
+
   va_list ap;
   va_start(ap, fmt);
 
@@ -98,4 +120,5 @@ void dbg_printf(const char *fmt, ...)
   }
 
   va_end(ap);
+  dbg_putstring("\n");
 }

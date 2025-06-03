@@ -43,7 +43,7 @@ void kmain(void)
     irq_register_handler(0, timer);
 
     term_printf("Boot OK - framebuffer %ux%u\n\n", fb->width, fb->height);
-    dbg_printf("Hello from %s!", "QuakeOS");
+    dbg_printf(INFO, "Hello from %s!", "QuakeOS");
 
     for (;;)
     {

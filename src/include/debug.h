@@ -5,8 +5,17 @@
 #include "utils/string.h"
 #include <stdarg.h>
 
+enum debug_level
+{
+  DEBUG = 0,
+  INFO = 1,
+  WARNING = 2,
+  ERROR = 3,
+  CRITICAL = 4,
+};
+
 void dbg_putchar(char c);
 void dbg_putstring(const char *s);
-void dbg_printf(const char *fmt, ...);
+void dbg_printf(enum debug_level level, const char *fmt, ...);
 
 #endif
