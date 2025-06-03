@@ -77,6 +77,7 @@ void terminal_init(struct limine_framebuffer *fb_)
 
 static void term_putchar(char ch)
 {
+  outb(0xE9, ch);
   if (ch == '\n')
   {
     cur_col = 0;
