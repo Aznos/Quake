@@ -1,6 +1,7 @@
 #include "include/terminal.h"
 #include "include/framebuffer.h"
 #include "include/kernel.h"
+#include "include/debug.h"
 #include "gdt/hal.h"
 #include "io/irq.h"
 
@@ -31,17 +32,25 @@ struct
 
 void kmain(void)
 {
+    dbg_printf(INFO, "Kernel starting...");
+
     if (LIMINE_BASE_REVISION_SUPPORTED == false)
         panic();
     if (fb_req.response == NULL || fb_req.response->framebuffer_count < 1)
         panic();
+
+    dbg_printf(INFO, "Framebuffer found: %dx%d, %dBpp",
+               fb_req.response->framebuffers[0]->width,
+               fb_req.response->framebuffers[0]->height,
+               fb_req.response->framebuffers[0]->bpp);
 
     fb = fb_req.response->framebuffers[0];
     terminal_init(fb);
     HAL_init();
     irq_register_handler(0, timer);
 
-    term_printf("Boot OK - framebuffer %ux%u\n\n", fb->width, fb->height);
+    term_printf("Welcome to QuakeOS!\n\n");
+    dbg_printf(INFO, "Boot OK");
 
     for (;;)
     {

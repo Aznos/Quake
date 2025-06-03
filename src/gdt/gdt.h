@@ -2,6 +2,7 @@
 #define GDT_H
 
 #include <stdint.h>
+#include "include/debug.h"
 
 #define GDT_CODE_SEGMENT 0x08
 #define GDT_DATA_SEGMENT 0x10
@@ -16,12 +17,14 @@ typedef struct
   uint8_t base_high;
 } __attribute__((packed)) gdt_entry;
 
-typedef struct {
+typedef struct
+{
   uint16_t limit;
-  gdt_entry* ptr;
+  gdt_entry *ptr;
 } __attribute__((packed)) gdt_descriptor;
 
-typedef enum {
+typedef enum
+{
   GDT_ACCESS_CODE_READABLE = 0x02,
   GDT_ACCESS_DATA_WRITABLE = 0x02,
 
@@ -42,7 +45,8 @@ typedef enum {
   GDT_ACCESS_PRESENT = 0x80,
 } GDT_ACCESS;
 
-typedef enum {
+typedef enum
+{
   GDT_FLAG_64BIT = 0x20,
   GDT_FLAG_32BIT = 0x40,
   GDT_FLAG_16BIT = 0x00,
@@ -58,18 +62,17 @@ typedef enum {
 #define GDT_BASE_HIGH(base) (((base) >> 24) & 0xFF)
 
 #define GDT_ENTRY(base, limit, access, flags) { \
-  GDT_LIMIT_LOW(limit), \
-  GDT_BASE_LOW(base), \
-  GDT_BASE_MIDDLE(base), \
-  access, \
-  GDT_FLAGS_LIMIT_HI(limit, flags), \
-  GDT_BASE_HIGH(base) \
-}
+    GDT_LIMIT_LOW(limit),                       \
+    GDT_BASE_LOW(base),                         \
+    GDT_BASE_MIDDLE(base),                      \
+    access,                                     \
+    GDT_FLAGS_LIMIT_HI(limit, flags),           \
+    GDT_BASE_HIGH(base)}
 
 extern gdt_entry g_GDT[];
 extern gdt_descriptor g_GDTDescriptor;
 
-void __attribute__((cdecl)) gdt_load(gdt_descriptor* descriptor, uint16_t code_segment, uint16_t data_segment);
+void __attribute__((cdecl)) gdt_load(gdt_descriptor *descriptor, uint16_t code_segment, uint16_t data_segment);
 void gdt_init();
 
 #endif

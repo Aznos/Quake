@@ -22,4 +22,5 @@ gdt_descriptor g_GDTDescriptor = {
 void gdt_init()
 {
     gdt_load(&g_GDTDescriptor, GDT_CODE_SEGMENT, GDT_DATA_SEGMENT);
+    dbg_printf(INFO, "GDT initialized with %d entries", sizeof(g_GDT) / sizeof(gdt_entry));
 }

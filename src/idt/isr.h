@@ -9,6 +9,7 @@
 #include "include/terminal.h"
 #include "include/kernel.h"
 #include "utils/string.h"
+#include "include/debug.h"
 
 typedef struct
 {
