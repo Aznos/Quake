@@ -9,6 +9,7 @@ PHDRS {
 }
 
 SECTIONS {
+    __kernel_start = .;
     . = 0xffffffff80000000;
 
     .limine_requests : {
@@ -35,4 +36,6 @@ SECTIONS {
         *(.eh_frame*)
         *(.note .note.*)
     }
+
+    __kernel_end = .;
 }

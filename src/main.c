@@ -6,9 +6,10 @@
 #include "io/irq.h"
 #include "io/keyboard.h"
 #include "memory/pmm.h"
+#include "memory/bump.h"
 
 __attribute__((used, section(".limine_requests"))) static volatile LIMINE_BASE_REVISION(3);
-__attribute__((used, section(".limine_requests"))) static volatile struct limine_framebuffer_request fb_req = {
+__attribute__((used, section(".limine_requests"))) volatile struct limine_framebuffer_request fb_req = {
     .id = LIMINE_FRAMEBUFFER_REQUEST, .revision = 0};
 __attribute__((used, section(".limine_requests_start"))) static volatile LIMINE_REQUESTS_START_MARKER;
 __attribute__((used, section(".limine_requests_end"))) static volatile LIMINE_REQUESTS_END_MARKER;
@@ -48,6 +49,7 @@ void kmain(void)
                fb_req.response->framebuffers[0]->height,
                fb_req.response->framebuffers[0]->bpp);
 
+    bump_init();
     pmm_init();
     dbg_printf(INFO, "Mem-map entries: %d", memmap_request.response->entry_count);
 
