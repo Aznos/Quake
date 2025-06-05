@@ -4,6 +4,7 @@
 #include "include/debug.h"
 #include "gdt/hal.h"
 #include "io/irq.h"
+#include "io/keyboard.h"
 
 __attribute__((used, section(".limine_requests"))) static volatile LIMINE_BASE_REVISION(3);
 __attribute__((used, section(".limine_requests"))) static volatile struct limine_framebuffer_request fb_req = {
@@ -21,7 +22,7 @@ void panic()
 
 void timer(registers *regs)
 {
-    term_printf("timer\n");
+    // we dont need to do anything yet
 }
 
 struct
@@ -47,7 +48,9 @@ void kmain(void)
     fb = fb_req.response->framebuffers[0];
     terminal_init(fb);
     HAL_init();
+
     irq_register_handler(0, timer);
+    irq_register_handler(1, handle_keyboard);
 
     term_printf("Welcome to QuakeOS!\n\n");
     dbg_printf(INFO, "Boot OK");
