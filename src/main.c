@@ -11,6 +11,8 @@ __attribute__((used, section(".limine_requests"))) static volatile struct limine
     .id = LIMINE_FRAMEBUFFER_REQUEST, .revision = 0};
 __attribute__((used, section(".limine_requests_start"))) static volatile LIMINE_REQUESTS_START_MARKER;
 __attribute__((used, section(".limine_requests_end"))) static volatile LIMINE_REQUESTS_END_MARKER;
+__attribute__((used, section(".limine_requests"))) static volatile struct limine_memmap_request memmap_request = {
+    .id = LIMINE_MEMMAP_REQUEST, .revision = 0};
 
 void panic()
 {
@@ -53,6 +55,7 @@ void kmain(void)
     irq_register_handler(1, handle_keyboard);
 
     term_printf("Welcome to QuakeOS!\n\n");
+    dbg_printf(INFO, "Mem-map entries: %d", memmap_request.response->entry_count);
     dbg_printf(INFO, "Boot OK");
 
     for (;;)
