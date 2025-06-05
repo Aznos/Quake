@@ -18,11 +18,7 @@ void handle_keyboard(registers *regs)
     char ch = sc_to_ascii[sc];
     if (ch)
     {
-      term_printf("kbd: 0x%x -> '%c'\n", sc, ch);
-    }
-    else
-    {
-      term_printf("kbd: 0x%x\n", sc);
+      term_printf("%c", ch);
     }
   }
 }
